@@ -38,7 +38,6 @@ class Notify(models.Model):
 				# !!!EXEC:{'instance': instance}
 				exec 'value = ' + str_exec
 				backend_args[arg.key] = value
-
 			else:
 				backend_args[arg.key] = arg.value
 
