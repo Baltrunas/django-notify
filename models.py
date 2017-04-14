@@ -33,10 +33,10 @@ class Notify(models.Model):
 
 		for arg in self.property.all():
 			if arg.value.startswith('!!!EXEC:'):
-				str_exec = arg.value[8:]
+				str_exec = 'value = ' + arg.value[8:]
 				# !!!EXEC:'from %s to %s' % (instance.from, instance.to)
 				# !!!EXEC:{'instance': instance}
-				exec 'value = ' + str_exec
+				exec str_exec
 				backend_args[arg.key] = value
 			else:
 				backend_args[arg.key] = arg.value
