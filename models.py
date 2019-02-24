@@ -33,18 +33,20 @@ class Notify(models.Model):
 
 		for arg in self.property.all():
 			if arg.value.startswith('!!!EXEC:'):
-				str_exec = 'value = ' + arg.value[8:]
 				# !!!EXEC:'from %s to %s' % (instance.from, instance.to)
 				# !!!EXEC:{'instance': instance}
-				exec str_exec
-				backend_args[arg.key] = value
+				# print(str_exec)
+				# exec('backend_args[arg.key] = %s' % arg.value[8:])
+				exec('value = %s' % arg.value[8:])
+				print(locals()['value'])
+				backend_args[arg.key] = locals()['value']
 			else:
 				backend_args[arg.key] = arg.value
 
 		backend_def(**backend_args)
 
 
-	def __unicode__(self):
+	def __str__(self):
 		return self.name
 
 	class Meta:
@@ -54,12 +56,12 @@ class Notify(models.Model):
 
 
 class NotifyProperty(models.Model):
-	notify = models.ForeignKey(Notify, verbose_name=_('Notify'), related_name='property')
+	notify = models.ForeignKey(Notify, verbose_name=_('Notify'), related_name='property', on_delete=models.PROTECT)
 	name = models.CharField(_('Name'), max_length=128)
 	key = models.SlugField(_('Key'), max_length=128)
 	value = models.TextField(_('Value'), null=True, blank=True)
 
-	def __unicode__(self):
+	def __str__(self):
 		return self.name
 
 	class Meta:
